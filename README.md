@@ -171,8 +171,8 @@ http://localhost:5000
 - [x] Paginação
 - [x] Filtros
 - [x] Ordenação
+- [ ] Autenticação (Users, Login, JWT)
 - [ ] Swagger/OpenAPI
-- [ ] JWT
 - [ ] Testes automatizados
 
 ---
