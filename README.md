@@ -168,9 +168,9 @@ http://localhost:5000
 - [x] Flask-Migrate
 - [x] Validação com Pydantic
 - [x] Tratamento global de exceções
-- [ ] Paginação
-- [ ] Filtros
-- [ ] Ordenação
+- [x] Paginação
+- [x] Filtros
+- [x] Ordenação
 - [ ] Swagger/OpenAPI
 - [ ] JWT
 - [ ] Testes automatizados
