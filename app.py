@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, app
 from flask_migrate import Migrate
 
 from config import Config
@@ -7,6 +7,7 @@ from database.database import db
 from models import book
 
 from routes.book_routes import book_bp
+from routes.user_routes import user_bp
 from exceptions import register_error_handlers
 
 
@@ -22,6 +23,8 @@ def create_app():
 
     app.register_blueprint(book_bp)
 
+    app.register_blueprint(user_bp)
+    
     register_error_handlers(app)
 
     return app
