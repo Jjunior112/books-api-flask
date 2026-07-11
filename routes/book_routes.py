@@ -36,13 +36,16 @@ def find_all():
     author = request.args.get(
         "author"
     )
-
+    sort = request.args.get(
+    "sort"
+    )
 
     pagination = service.find_all(
         page,
         size,
         title,
-        author
+        author,
+        sort
     )
 
 

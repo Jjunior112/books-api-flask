@@ -1,15 +1,25 @@
+from exceptions.custom_exceptions import BookNotFoundException
 from models.book import Book
 from database.database import db
-from exceptions import BookNotFoundException
+from exceptions import InvalidSortFieldException
 
 class BookService:
+
+    SORT_FIELDS = {
+        "title": Book.title,
+        "author": Book.author,
+        "pages": Book.pages,
+        "created_at": Book.created_at
+    }
+
 
     def find_all(
             self,
             page,
             size,
             title=None,
-            author=None
+            author=None,
+            sort=None
     ):
 
         query = Book.query
@@ -33,14 +43,37 @@ class BookService:
             )
 
 
-        pagination = query.paginate(
+        if sort:
+
+            field, direction = self.parse_sort(sort)
+
+            column = self.SORT_FIELDS.get(field)
+
+
+            if column is None:
+
+                raise InvalidSortFieldException(field)
+
+
+            if direction == "desc":
+
+                query = query.order_by(
+                    column.desc()
+                )
+
+            else:
+
+                query = query.order_by(
+                    column.asc()
+                )
+
+
+        return query.paginate(
             page=page,
             per_page=size,
             error_out=False
         )
-
-
-        return pagination
+    
     def find_by_id(self, book_id):
 
         book = db.session.get(Book, book_id)
@@ -89,3 +122,19 @@ class BookService:
         db.session.commit()
 
         return True
+   
+    def parse_sort(self, sort):
+
+        values = sort.split(",")
+
+        field = values[0]
+
+        direction = (
+            values[1]
+            if len(values) > 1
+            else "asc"
+        )
+
+
+        return field, direction
+    
