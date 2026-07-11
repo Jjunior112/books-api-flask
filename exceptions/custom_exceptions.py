@@ -15,3 +15,11 @@ class InvalidSortFieldException(Exception):
         super().__init__(
             f"Invalid sort field: {field}"
         )
+
+class InvalidCredentialsException(Exception):
+
+    def __init__(self):
+
+        super().__init__(
+            "Invalid email or password"
+        )

@@ -21,3 +21,12 @@ class UserService:
         db.session.commit()
 
         return user
+    
+    def find_by_email(
+        self,
+        email
+    ):
+
+        return User.query.filter_by(
+            email=email
+        ).first()

@@ -4,6 +4,7 @@ from pydantic import ValidationError
 
 from exceptions.custom_exceptions import BookNotFoundException
 
+from exceptions.custom_exceptions import InvalidCredentialsException
 
 def register_error_handlers(app):
 
@@ -41,3 +42,11 @@ def register_error_handlers(app):
         return jsonify({
             "message": "Internal server error"
         }), 500
+    @app.errorhandler(
+    InvalidCredentialsException
+    )
+    def handle_invalid_credentials(error):
+
+        return {
+            "message": str(error)
+        }, 401
