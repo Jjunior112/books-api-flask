@@ -29,13 +29,24 @@ def find_all():
     )
 
 
-    pagination = service.find_all(
-        page,
-        size
+    title = request.args.get(
+        "title"
+    )
+
+    author = request.args.get(
+        "author"
     )
 
 
-    response = [
+    pagination = service.find_all(
+        page,
+        size,
+        title,
+        author
+    )
+
+
+    books = [
         book_to_response(book)
         for book in pagination.items
     ]
@@ -43,8 +54,8 @@ def find_all():
 
     return {
         "content": [
-            item.model_dump()
-            for item in response
+            book.model_dump()
+            for book in books
         ],
         "page": page,
         "size": size,

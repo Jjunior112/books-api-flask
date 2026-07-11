@@ -4,9 +4,34 @@ from exceptions import BookNotFoundException
 
 class BookService:
 
-    def find_all(self, page, size):
+    def find_all(
+            self,
+            page,
+            size,
+            title=None,
+            author=None
+    ):
 
         query = Book.query
+
+
+        if title:
+
+            query = query.filter(
+                Book.title.ilike(
+                    f"%{title}%"
+                )
+            )
+
+
+        if author:
+
+            query = query.filter(
+                Book.author.ilike(
+                    f"%{author}%"
+                )
+            )
+
 
         pagination = query.paginate(
             page=page,
@@ -14,8 +39,8 @@ class BookService:
             error_out=False
         )
 
+
         return pagination
-    
     def find_by_id(self, book_id):
 
         book = db.session.get(Book, book_id)
