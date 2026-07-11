@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 
 class BookRequest(BaseModel):
@@ -16,3 +17,15 @@ class BookRequest(BaseModel):
     pages: int = Field(
         gt=0
     )
+
+
+class BookResponse(BaseModel):
+
+    id: int
+    title: str
+    author: str
+    pages: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

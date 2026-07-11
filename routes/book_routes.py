@@ -1,6 +1,9 @@
 from flask import Blueprint, jsonify, request
+from schemas.mapper import book_to_response
 from services.book_service import BookService
 from schemas import BookRequest
+from flask import request
+
 
 book_bp = Blueprint(
     "books",
@@ -10,49 +13,67 @@ book_bp = Blueprint(
 
 service = BookService()
 
-
 @book_bp.get("")
 def find_all():
 
-    books = service.find_all()
+    page = request.args.get(
+        "page",
+        default=1,
+        type=int
+    )
 
-    return jsonify([
-        {
-            "id": book.id,
-            "title": book.title,
-            "author": book.author,
-            "pages": book.pages
-        }
-        for book in books
-    ])
+    size = request.args.get(
+        "size",
+        default=10,
+        type=int
+    )
+
+
+    pagination = service.find_all(
+        page,
+        size
+    )
+
+
+    response = [
+        book_to_response(book)
+        for book in pagination.items
+    ]
+
+
+    return {
+        "content": [
+            item.model_dump()
+            for item in response
+        ],
+        "page": page,
+        "size": size,
+        "total_elements": pagination.total,
+        "total_pages": pagination.pages
+    }
 
 @book_bp.get("/<int:book_id>")
 def find_by_id(book_id):
 
     book = service.find_by_id(book_id)
 
-    return jsonify({
-        "id": book.id,
-        "title": book.title,
-        "author": book.author,
-        "pages": book.pages
-    })
+    response = book_to_response(book)
 
-from flask import request
+    return response.model_dump()
 
 @book_bp.post("")
 def create():
 
     data = BookRequest(**request.get_json())
 
-    book = service.create(data.model_dump())
+    book = service.create(
+        data.model_dump()
+    )
 
-    return jsonify({
-        "id": book.id,
-        "title": book.title,
-        "author": book.author,
-        "pages": book.pages
-    }), 201
+    response = book_to_response(book)
+
+
+    return response.model_dump(), 201
 
 @book_bp.put("/<int:book_id>")
 def update(book_id):

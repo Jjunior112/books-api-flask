@@ -4,7 +4,6 @@ from flask_migrate import Migrate
 from config import Config
 from database.database import db
 
-
 from models import book
 
 from routes.book_routes import book_bp

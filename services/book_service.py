@@ -4,8 +4,17 @@ from exceptions import BookNotFoundException
 
 class BookService:
 
-    def find_all(self):
-        return Book.query.all()
+    def find_all(self, page, size):
+
+        query = Book.query
+
+        pagination = query.paginate(
+            page=page,
+            per_page=size,
+            error_out=False
+        )
+
+        return pagination
     
     def find_by_id(self, book_id):
 
