@@ -160,16 +160,20 @@ http://localhost:5000
 
 ---
 
-## 📈 Funcionalidades implementadas
+## 📈 Roadmap
 
-* Estrutura modular em camadas
-* CRUD completo
-* Persistência com MySQL
-* SQLAlchemy ORM
-* Flask-Migrate
-* Validação com Pydantic
-* Tratamento global de exceções
-* Docker para banco de dados
+- [x] CRUD de livros
+- [x] SQLAlchemy
+- [x] MySQL
+- [x] Flask-Migrate
+- [x] Validação com Pydantic
+- [x] Tratamento global de exceções
+- [ ] Paginação
+- [ ] Filtros
+- [ ] Ordenação
+- [ ] Swagger/OpenAPI
+- [ ] JWT
+- [ ] Testes automatizados
 
 ---
 
