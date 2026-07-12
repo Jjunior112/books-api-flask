@@ -6,6 +6,8 @@ from exceptions.custom_exceptions import BookNotFoundException
 
 from exceptions.custom_exceptions import InvalidCredentialsException
 
+from exceptions import UserAlreadyExistsException
+
 def register_error_handlers(app):
 
     @app.errorhandler(BookNotFoundException)
@@ -50,3 +52,9 @@ def register_error_handlers(app):
         return {
             "message": str(error)
         }, 401
+    @app.errorhandler(UserAlreadyExistsException)
+    def handle_user_already_exists(error):
+
+        return {
+            "message": str(error)
+        }, 409

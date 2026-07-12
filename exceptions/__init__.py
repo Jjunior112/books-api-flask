@@ -1,9 +1,7 @@
 from .custom_exceptions import (
     BookNotFoundException,
-    InvalidSortFieldException
+    InvalidSortFieldException,
+    InvalidCredentialsException,
+    UserAlreadyExistsException
 )
 from .handlers import register_error_handlers
-
-from .custom_exceptions import (
-    InvalidCredentialsException
-)

@@ -3,6 +3,7 @@ from schemas.mapper import book_to_response
 from services.book_service import BookService
 from schemas import BookRequest
 from flask import request
+from flask_jwt_extended import jwt_required
 
 
 book_bp = Blueprint(
@@ -14,6 +15,7 @@ book_bp = Blueprint(
 service = BookService()
 
 @book_bp.get("")
+@jwt_required()
 def find_all():
 
     page = request.args.get(
@@ -67,6 +69,7 @@ def find_all():
     }
 
 @book_bp.get("/<int:book_id>")
+@jwt_required()
 def find_by_id(book_id):
 
     book = service.find_by_id(book_id)
@@ -76,6 +79,7 @@ def find_by_id(book_id):
     return response.model_dump()
 
 @book_bp.post("")
+@jwt_required()
 def create():
 
     data = BookRequest(**request.get_json())
@@ -90,6 +94,7 @@ def create():
     return response.model_dump(), 201
 
 @book_bp.put("/<int:book_id>")
+@jwt_required()
 def update(book_id):
 
     data = BookRequest(**request.get_json())
@@ -110,6 +115,7 @@ def update(book_id):
     })
 
 @book_bp.delete("/<int:book_id>")
+@jwt_required()
 def delete(book_id):
 
     deleted = service.delete(book_id)
