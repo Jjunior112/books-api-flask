@@ -3,7 +3,10 @@ from schemas.mapper import book_to_response
 from services.book_service import BookService
 from schemas import BookRequest
 from flask import request
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity
+)
 
 
 book_bp = Blueprint(
@@ -18,6 +21,8 @@ service = BookService()
 @jwt_required()
 def find_all():
 
+    user_id = int(get_jwt_identity())
+
     page = request.args.get(
         "page",
         default=1,
@@ -29,7 +34,6 @@ def find_all():
         default=10,
         type=int
     )
-
 
     title = request.args.get(
         "title"
@@ -43,6 +47,7 @@ def find_all():
     )
 
     pagination = service.find_all(
+        user_id,
         page,
         size,
         title,
@@ -72,7 +77,8 @@ def find_all():
 @jwt_required()
 def find_by_id(book_id):
 
-    book = service.find_by_id(book_id)
+    user_id = int(get_jwt_identity())
+    book = service.find_by_id(book_id, user_id)
 
     response = book_to_response(book)
 
@@ -84,8 +90,11 @@ def create():
 
     data = BookRequest(**request.get_json())
 
+    user_id = int(get_jwt_identity())
+
     book = service.create(
-        data.model_dump()
+        data.model_dump(),
+        user_id
     )
 
     response = book_to_response(book)
@@ -97,11 +106,13 @@ def create():
 @jwt_required()
 def update(book_id):
 
+    user_id = int(get_jwt_identity())
     data = BookRequest(**request.get_json())
 
     book = service.update(
         book_id,
-        data.model_dump()
+        data.model_dump(),
+        user_id
     )
 
     if book is None:
@@ -117,8 +128,8 @@ def update(book_id):
 @book_bp.delete("/<int:book_id>")
 @jwt_required()
 def delete(book_id):
-
-    deleted = service.delete(book_id)
+    user_id = int(get_jwt_identity())
+    deleted = service.delete(book_id, user_id)
 
     if not deleted:
         return {"message": "Book not found"}, 404

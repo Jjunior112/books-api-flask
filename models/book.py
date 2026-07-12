@@ -28,3 +28,13 @@ class Book(db.Model):
         db.DateTime,
         default=datetime.utcnow
     )
+
+    user_id = db.Column(
+    db.Integer,
+    db.ForeignKey("users.id"),
+    nullable=False
+    )
+    user = db.relationship(
+    "User",
+    back_populates="books"
+    )

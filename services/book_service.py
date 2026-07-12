@@ -15,6 +15,7 @@ class BookService:
 
     def find_all(
             self,
+            user_id,
             page,
             size,
             title=None,
@@ -22,7 +23,10 @@ class BookService:
             sort=None
     ):
 
-        query = Book.query
+        query = Book.query.filter_by(
+            
+            user_id=user_id
+        )
 
 
         if title:
@@ -74,21 +78,28 @@ class BookService:
             error_out=False
         )
     
-    def find_by_id(self, book_id):
+    def find_by_id(self, book_id, user_id):
 
-        book = db.session.get(Book, book_id)
+        book = Book.query.filter_by(
+
+        id=book_id,
+
+        user_id=user_id
+
+    ).first()
 
         if book is None:
             raise BookNotFoundException(book_id)
 
         return book
 
-    def create(self, data):
+    def create(self, data, user_id):
 
         book = Book(
             title=data["title"],
             author=data["author"],
-            pages=data["pages"]
+            pages=data["pages"],
+            user_id=user_id
         )
 
         db.session.add(book)
@@ -96,9 +107,15 @@ class BookService:
 
         return book
 
-    def update(self, book_id, data):
+    def update(self, book_id, data, user_id):
 
-        book = db.session.get(Book, book_id)
+        book = Book.query.filter_by(
+
+        id=book_id,
+
+        user_id=user_id
+
+    ).first()
 
         if book is None:
             raise BookNotFoundException(book_id)
@@ -111,9 +128,15 @@ class BookService:
 
         return book
 
-    def delete(self, book_id):
+    def delete(self, book_id, user_id):
 
-        book = db.session.get(Book, book_id)
+        book = Book.query.filter_by(
+
+        id=book_id,
+
+        user_id=user_id
+
+        ).first()
 
         if book is None:
             raise BookNotFoundException(book_id)

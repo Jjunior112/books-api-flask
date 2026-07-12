@@ -37,3 +37,9 @@ class User(db.Model):
         db.DateTime,
         default=datetime.utcnow
     )
+
+    books = db.relationship(
+    "Book",
+    back_populates="user",
+    cascade="all, delete-orphan"
+    )
