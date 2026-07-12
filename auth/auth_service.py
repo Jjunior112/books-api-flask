@@ -5,6 +5,7 @@ from services.user_service import UserService
 from exceptions import (
     InvalidCredentialsException
 )
+from flask_jwt_extended import create_access_token
 
 
 class AuthService:
@@ -41,4 +42,12 @@ class AuthService:
             raise InvalidCredentialsException()
 
 
-        return user
+        access_token = create_access_token(
+            identity=str(user.id),
+            additional_claims={
+                "name": user.name,
+                "email": user.email
+            }
+        )
+
+        return access_token

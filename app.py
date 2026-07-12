@@ -10,15 +10,21 @@ from routes.book_routes import book_bp
 from routes.user_routes import user_bp
 from routes.auth_routes import auth_bp
 from exceptions import register_error_handlers
+from flask_jwt_extended import JWTManager
 
 
 def create_app():
 
     app = Flask(__name__)
-
+    
+    jwt = JWTManager()
+    
     app.config.from_object(Config)
+    
 
     db.init_app(app)
+
+    jwt.init_app(app)
 
     Migrate(app, db)
 

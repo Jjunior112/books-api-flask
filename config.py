@@ -8,6 +8,16 @@ class Config:
 
     SECRET_KEY = os.getenv("SECRET_KEY")
 
+    SQLALCHEMY_DATABASE_URI = ...
+
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+
+    JWT_ACCESS_TOKEN_EXPIRES = int(
+        os.getenv("JWT_ACCESS_TOKEN_EXPIRES", 3600)
+    )
+
     SQLALCHEMY_DATABASE_URI = (
         f"mysql+pymysql://"
         f"{os.getenv('DB_USER')}:"

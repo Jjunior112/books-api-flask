@@ -9,6 +9,7 @@ from schemas import (
     LoginRequest
 )
 
+from schemas.auth_schema import LoginResponse
 from schemas.mapper import user_to_response
 
 
@@ -28,13 +29,13 @@ def login():
         **request.get_json()
     )
 
-    user = service.login(
+    token = service.login(
         data.email,
         data.password
     )
 
-    response = user_to_response(
-        user
+    response = LoginResponse(
+        access_token=token
     )
 
     return response.model_dump()
