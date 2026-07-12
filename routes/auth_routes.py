@@ -12,6 +12,13 @@ from schemas import (
 from schemas.auth_schema import LoginResponse
 from schemas.mapper import user_to_response
 
+from flask_jwt_extended import (
+    jwt_required,
+    get_jwt_identity,
+    create_access_token,
+    get_jwt
+)
+
 
 auth_bp = Blueprint(
     "auth",
@@ -29,13 +36,34 @@ def login():
         **request.get_json()
     )
 
-    token = service.login(
+    tokens = service.login(
         data.email,
         data.password
     )
 
     response = LoginResponse(
-        access_token=token
+        access_token=tokens["access_token"],
+        refresh_token=tokens["refresh_token"]
     )
 
     return response.model_dump()
+
+@auth_bp.post("/refresh")
+@jwt_required(refresh=True)
+def refresh():
+
+    identity = get_jwt_identity()
+
+    claims = get_jwt()
+
+    access_token = create_access_token(
+        identity=identity,
+        additional_claims={
+            "name": claims.get("name"),
+            "email": claims.get("email")
+        }
+    )
+
+    return {
+        "access_token": access_token
+    }

@@ -5,7 +5,10 @@ from services.user_service import UserService
 from exceptions import (
     InvalidCredentialsException
 )
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token
+)
 
 
 class AuthService:
@@ -50,4 +53,11 @@ class AuthService:
             }
         )
 
-        return access_token
+        refresh_token = create_refresh_token(
+            identity=str(user.id)
+        )
+
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        }
